@@ -24,7 +24,7 @@
         <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition">
             Sign In
         </button>
-        <p>New User? Click <a href="">here</a> to Register</p>
+        <p>New User? Click <a href="/register.jsp" style="color: rgb(46, 46, 216)">here</a> to Be a member</p>
     </form>
 </div>
 </body>

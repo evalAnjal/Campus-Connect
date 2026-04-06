@@ -28,8 +28,8 @@
         <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition">
             Sign In
         </button>
-        <p>New User? Click <a href="register.jsp" class="text-indigo-600">here</a> to Be Member</p>
-        <p>New User? Click <a href="/WEB-INF/hi.jsp" class="text-indigo-600">here</a> tHJi jsop</p>
+        <p>Already A member? Click <a href="index.jsp" class="text-indigo-600">here</a> to Login</p>
+       
 
     </form>
 </div>
