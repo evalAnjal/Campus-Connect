@@ -33,14 +33,14 @@ public class LoginServlet extends HttpServlet {
 
            
             if ("ADMIN".equals(user.getRole())) {
-                response.sendRedirect("admin-dashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/admin-dashboard.jsp");
             } else {
-                response.sendRedirect("member-dashboard.jsp");
+                response.sendRedirect("dashboard");
             }
         } else {
            
             request.setAttribute("errorMessage", "Invalid email or password!");
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
 }

@@ -40,10 +40,10 @@ public class RegisterServelet extends HttpServlet {
         try {
             userDAO.registerUser(newUser);
             request.setAttribute("successMessage", "Registration successful! Please login.");
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
         } catch (SQLException e) {
             request.setAttribute("errorMessage", toUserMessage(e));
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
         }
     }
 

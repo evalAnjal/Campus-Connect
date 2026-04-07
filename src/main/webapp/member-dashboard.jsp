@@ -16,7 +16,7 @@
             <h1 class="text-2xl font-bold text-indigo-600">Evently Dashboard</h1>
             <p class="text-gray-500">Welcome, ${user.username}</p>
         </div>
-        <a href="logout" class="text-sm text-indigo-600 hover:text-indigo-700">Logout</a>
+        <a href="<%= request.getContextPath() %>/logout" class="text-sm text-indigo-600 hover:text-indigo-700">Logout</a>
     </div>
 </header>
 
@@ -33,54 +33,27 @@
         </div>
 
         <div class="border border-gray-200 rounded-lg overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-700">
-                <tr>
-                    <th class="text-left font-semibold px-4 py-3">Event</th>
-                    <th class="text-left font-semibold px-4 py-3">Date</th>
-                    <th class="text-left font-semibold px-4 py-3">Location</th>
-                    <th class="text-left font-semibold px-4 py-3">Action</th>
-                </tr>
-                </thead>
-                <tbody id="eventTableBody" class="divide-y divide-gray-200 text-gray-700">
-                <tr data-search="campus tech meetup 12 apr 10:00 am main hall">
-                    <td class="px-4 py-3">Campus Tech Meetup</td>
-                    <td class="px-4 py-3">12 Apr, 10:00 AM</td>
-                    <td class="px-4 py-3">Main Hall</td>
-                    <td class="px-4 py-3">
-                        <form method="post" action="joinEvent">
-                            <input type="hidden" name="eventId" value="101">
-                            <button type="submit" class="bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 transition">Join</button>
-                        </form>
-                    </td>
-                </tr>
-                <tr data-search="community service drive 18 apr 2:00 pm student center">
-                    <td class="px-4 py-3">Community Service Drive</td>
-                    <td class="px-4 py-3">18 Apr, 2:00 PM</td>
-                    <td class="px-4 py-3">Student Center</td>
-                    <td class="px-4 py-3">
-                        <form method="post" action="joinEvent">
-                            <input type="hidden" name="eventId" value="102">
-                            <button type="submit" class="bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 transition">Join</button>
-                        </form>
-                    </td>
-                </tr>
-                <tr data-search="sports and wellness day 25 apr 9:30 am sports ground">
-                    <td class="px-4 py-3">Sports and Wellness Day</td>
-                    <td class="px-4 py-3">25 Apr, 9:30 AM</td>
-                    <td class="px-4 py-3">Sports Ground</td>
-                    <td class="px-4 py-3">
-                        <form method="post" action="joinEvent">
-                            <input type="hidden" name="eventId" value="103">
-                            <button type="submit" class="bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 transition">Join</button>
-                        </form>
-                    </td>
-                </tr>
-                <tr id="noResultsRow" class="hidden">
-                    <td colspan="4" class="px-4 py-5 text-center text-gray-500">No events match your search.</td>
-                </tr>
-                </tbody>
-            </table>
+         <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<table class="min-w-full divide-y divide-gray-200">
+    <thead>
+        <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+        </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+        <c:forEach var="event" items="${events}">
+            <tr>
+                <td class="px-6 py-4">${event.title}</td>
+                <td class="px-6 py-4">${event.location}</td>
+                <td class="px-6 py-4">
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded">Join</button>
+                </td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
         </div>
     </div>
 </main>

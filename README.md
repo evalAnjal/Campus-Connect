@@ -109,6 +109,7 @@ The packaged WAR is generated under `target/`.
 #SCREENSHOTS
 
 <hr>
+
 ![alt text](image.png)
 
 ![alt text](image-1.png)
