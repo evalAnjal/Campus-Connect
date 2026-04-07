@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.eventmgmt.demo.model.User" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +10,17 @@
 	<title>Admin Dashboard | Evently</title>
 </head>
 <body class="bg-slate-100 text-gray-800">
+
+   <% User user = (User) session.getAttribute("user");
+      if (user == null || !user.getRole().equals("ADMIN")) {
+         
+   %>
+   <script>
+      alert("You are not authorized to access this page.");
+      window.location.href = "index.jsp";
+   </script>
+    <% } %>
+
 <div class="min-h-screen flex">
 	<aside class="w-56 bg-indigo-200 border-r border-gray-200 p-4 sm:p-5">
 		<h1 class="text-xl font-bold text-indigo-600">Evently</h1>
@@ -22,7 +35,7 @@
 		</nav>
 
 		<div class="mt-8 pt-6 border-t border-gray-200">
-			<a href="index.jsp" class="text-sm text-indigo-600 hover:text-indigo-700">Logout</a>
+			<a href="logout" class="text-sm text-indigo-600 hover:text-indigo-700">Logout</a>
 		</div>
 	</aside>
 

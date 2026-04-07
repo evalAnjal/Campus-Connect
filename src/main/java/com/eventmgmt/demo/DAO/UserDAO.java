@@ -35,7 +35,7 @@ public class UserDAO {
     }
 
     public void registerUser(User user) throws SQLException {
-        // Let DB assign role default if configured; this avoids enum/text mismatch issues.
+       
         String sql = "INSERT INTO users(username,email,password) VALUES(?,?,?)";
         try(Connection conn = DBconnection.getConnection();
             PreparedStatement st = conn.prepareStatement(sql)){

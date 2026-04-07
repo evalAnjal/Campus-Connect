@@ -16,7 +16,7 @@
             <h1 class="text-2xl font-bold text-indigo-600">Evently Dashboard</h1>
             <p class="text-gray-500">Welcome, ${user.username}</p>
         </div>
-        <a href="index.jsp" class="text-sm text-indigo-600 hover:text-indigo-700">Logout</a>
+        <a href="logout" class="text-sm text-indigo-600 hover:text-indigo-700">Logout</a>
     </div>
 </header>
 
