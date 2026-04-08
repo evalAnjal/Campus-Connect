@@ -21,7 +21,7 @@
         <div class="mb-4 rounded-lg bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm"><%= errorMessage %></div>
     <% } %>
 
-    <form action="<%= request.getContextPath() %>/loginProcess" method="POST" class="space-y-6">
+    <form action="/loginProcess" method="POST" class="space-y-6">
         <div>
             <label class="block text-sm font-medium text-gray-700">Email Address</label>
             <input type="email" name="email" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">

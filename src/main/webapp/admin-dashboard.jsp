@@ -1,132 +1,173 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.eventmgmt.demo.model.User" %>
-
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="https://cdn.tailwindcss.com"></script>
-	<title>Admin Dashboard | Evently</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Admin Dashboard | Evently</title>
 </head>
-<body class="bg-slate-100 text-gray-800">
+<body class="bg-blue-50 text-slate-900 min-h-screen">
+<main class="max-w-6xl mx-auto px-4 py-8 sm:py-10">
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-semibold">Evently Admin Dashboard</h1>
+            <p class="text-sm text-slate-600 mt-1">Manage events, participation, and registrations</p>
+			<P class="text-sm text-gray-600 mt-1" >${user.role} | ${user.email} | ${user.username} </P>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="openCreateModal" type="button" class="rounded-md bg-indigo-600 text-white px-4 py-2 text-sm hover:bg-indigo-700">
+                Create New Event
+            </button>
+            <a href="${pageContext.request.contextPath}/logout" class="text-sm text-indigo-700 hover:text-indigo-900">Logout</a>
+        </div>
+    </header>
 
-   <% User user = (User) session.getAttribute("user");
-      if (user == null || !user.getRole().equals("ADMIN")) {
-         
-   %>
-   <script>
-      alert("You are not authorized to access this page.");
-      window.location.href = "index.jsp";
-   </script>
-    <% } %>
+    <c:if test="${param.success == '1'}">
+        <div class="mb-4 rounded-md border border-green-200 bg-green-50 text-green-800 px-4 py-3 text-sm">
+            Event created successfully.
+        </div>
+    </c:if>
+    <c:if test="${param.error == 'missing'}">
+        <div class="mb-4 rounded-md border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm">
+            Please fill all required fields.
+        </div>
+    </c:if>
+    <c:if test="${param.error == 'date'}">
+        <div class="mb-4 rounded-md border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm">
+            Invalid date format.
+        </div>
+    </c:if>
+    <c:if test="${param.error == 'failed'}">
+        <div class="mb-4 rounded-md border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm">
+            Event could not be created. Please try again.
+        </div>
+    </c:if>
 
-<div class="min-h-screen flex">
-	<aside class="w-56 bg-indigo-200 border-r border-gray-200 p-4 sm:p-5">
-		<h1 class="text-xl font-bold text-indigo-600">Evently</h1>
-		<p class="text-xs text-gray-500 mt-1">Welcome, ${user.username}</p>
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <article class="bg-white border border-blue-100 rounded-lg p-4 shadow-sm">
+            <p class="text-sm text-slate-500">Total Events</p>
+            <p class="text-2xl font-semibold mt-1">${totalEvents}</p>
+        </article>
+        <article class="bg-white border border-blue-100 rounded-lg p-4 shadow-sm">
+            <p class="text-sm text-slate-500">Approved Events</p>
+            <p class="text-2xl font-semibold mt-1">${approvedEvents}</p>
+        </article>
+        <article class="bg-white border border-blue-100 rounded-lg p-4 shadow-sm">
+            <p class="text-sm text-slate-500">Members</p>
+            <p class="text-2xl font-semibold mt-1">${totalMembers}</p>
+        </article>
+        <article class="bg-white border border-blue-100 rounded-lg p-4 shadow-sm">
+            <p class="text-sm text-slate-500">Total Registrations</p>
+            <p class="text-2xl font-semibold mt-1">${totalRegistrations}</p>
+        </article>
+    </section>
 
-		<nav class="mt-8 space-y-1 text-sm">
-			<a href="#" class="block px-3 py-2 rounded-md bg-indigo-50 text-indigo-700 font-medium">Dashboard</a>
-			<a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">Events</a>
-			<a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">Requests</a>
-			<a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">Members</a>
-			<a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">Reports</a>
-		</nav>
+    <section class="bg-white border border-blue-100 rounded-lg p-5 sm:p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="text-lg font-medium text-indigo-700">Event Overview</h2>
+            <span class="text-xs text-slate-500">Per-event participation and registrations</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                <tr class="text-left border-b border-blue-100 bg-blue-50/60">
+                    <th class="py-2 pr-4">Title</th>
+                    <th class="py-2 pr-4">Date</th>
+                    <th class="py-2 pr-4">Location</th>
+                    <th class="py-2 pr-4">Participants</th>
+                    <th class="py-2 pr-4">Registrations</th>
+                    <th class="py-2">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="event" items="${events}">
+                    <tr class="border-b border-blue-50 hover:bg-blue-50/40">
+                        <td class="py-2 pr-4">${event.title}</td>
+                        <td class="py-2 pr-4 whitespace-nowrap">
+                            <fmt:formatDate value="${event.eventDate}" pattern="yyyy-MM-dd HH:mm" />
+                        </td>
+                        <td class="py-2 pr-4">${event.location}</td>
+                        <td class="py-2 pr-4">${participantCounts[event.id] == null ? 0 : participantCounts[event.id]}</td>
+                        <td class="py-2 pr-4">${registrationCounts[event.id] == null ? 0 : registrationCounts[event.id]}</td>
+                        <td class="py-2">${event.status}</td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty events}">
+                    <tr>
+                        <td colspan="6" class="py-3 text-slate-500">No events to show.</td>
+                    </tr>
+                </c:if>
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-		<div class="mt-8 pt-6 border-t border-gray-200">
-			<a href="logout" class="text-sm text-indigo-600 hover:text-indigo-700">Logout</a>
-		</div>
-	</aside>
+    <div id="createModal" class="hidden fixed inset-0 z-40">
+        <div id="modalBackdrop" class="absolute inset-0 bg-black/40"></div>
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <section class="w-full max-w-xl bg-white rounded-lg border border-blue-100 p-5 sm:p-6 shadow-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-medium text-indigo-700">Create New Event</h2>
+                    <button id="closeCreateModal" type="button" class="text-slate-500 hover:text-indigo-700">Close</button>
+                </div>
+                <form method="post" action="${pageContext.request.contextPath}/addEvent" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="title">Title</label>
+                        <input id="title" name="title" type="text" required class="w-full rounded-md border border-blue-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="description">Description</label>
+                        <textarea id="description" name="description" rows="4" class="w-full rounded-md border border-blue-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1" for="location">Location</label>
+                            <input id="location" name="location" type="text" required class="w-full rounded-md border border-blue-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1" for="eventDate">Date and Time</label>
+                            <input id="eventDate" name="eventDate" type="datetime-local" required class="w-full rounded-md border border-blue-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button id="cancelCreateModal" type="button" class="rounded-md border border-blue-200 px-4 py-2 text-sm text-slate-700 hover:bg-blue-50">Cancel</button>
+                        <button type="submit" class="rounded-md bg-indigo-600 text-white px-4 py-2 text-sm hover:bg-indigo-700">Create Event</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</main>
 
-	<main class="flex-1 p-5 sm:p-8">
-		<div class=" rounded-xl border border-gray-200 p-5 sm:p-6">
-			<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-				<div>
-					<h2 class="text-2xl font-semibold">Dashboard</h2>
-					<p class="text-sm text-gray-500 mt-1">Manage events and monitor requests.</p>
-				</div>
-				<div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-					<input
-						type="text"
-						name="search"
-						placeholder="Search by event, member, or keyword"
-						class="w-full sm:w-80 px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
-					>
-					<select
-						name="location"
-						class="px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"
-					>
-						<option value="">All Locations</option>
-						<option value="Itahari">Itahari</option>
-						<option value="Biratnagar">Biratnagar</option>
-						<option value="Damak">Damak</option>
-						<option value="Dharan">Dharan</option>
-						<option value="Inaruwa">Inaruwa</option>
-					</select>
-				</div>
-			</div>
+<script>
+    const modal = document.getElementById("createModal");
+    const openBtn = document.getElementById("openCreateModal");
+    const closeBtn = document.getElementById("closeCreateModal");
+    const cancelBtn = document.getElementById("cancelCreateModal");
+    const backdrop = document.getElementById("modalBackdrop");
 
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-				<div class="border border-gray-200 rounded-lg p-4">
-					<p class="text-sm text-gray-500">Total Events</p>
-					<p class="text-2xl font-semibold mt-1">12</p>
-				</div>
-				<div class="border border-gray-200 rounded-lg p-4">
-					<p class="text-sm text-gray-500">Pending Requests</p>
-					<p class="text-2xl font-semibold mt-1">7</p>
-				</div>
-				<div class="border border-gray-200 rounded-lg p-4">
-					<p class="text-sm text-gray-500">Active Members</p>
-					<p class="text-2xl font-semibold mt-1">214</p>
-				</div>
-			</div>
+    function openModal() {
+        modal.classList.remove("hidden");
+        document.body.classList.add("overflow-hidden");
+    }
 
-			<div class="mt-6 border border-gray-200 rounded-lg overflow-x-auto">
-				<table class="w-full text-sm">
-					<thead class="bg-gray-50 text-gray-700">
-					<tr>
-						<th class="text-left px-4 py-3 font-medium">Event</th>
-						<th class="text-left px-4 py-3 font-medium">Location</th>
-						<th class="text-left px-4 py-3 font-medium">Date</th>
-						<th class="text-left px-4 py-3 font-medium">Status</th>
-					</tr>
-					</thead>
-					<tbody class="divide-y divide-gray-200">
-					<tr>
-						<td class="px-4 py-3">Campus Tech Meetup</td>
-						<td class="px-4 py-3">Biratnagar</td>
-						<td class="px-4 py-3">12 Apr</td>
-						<td class="px-4 py-3"><span class="text-amber-700 bg-amber-100 px-2 py-1 rounded">Pending</span></td>
-					</tr>
-					<tr>
-						<td class="px-4 py-3">Community Service Drive</td>
-						<td class="px-4 py-3">Itahari</td>
-						<td class="px-4 py-3">18 Apr</td>
-						<td class="px-4 py-3"><span class="text-emerald-700 bg-emerald-100 px-2 py-1 rounded">Approved</span></td>
-					</tr>
-					<tr>
-						<td class="px-4 py-3">Sports and Wellness Day</td>
-						<td class="px-4 py-3">Damak</td>
-						<td class="px-4 py-3">25 Apr</td>
-						<td class="px-4 py-3"><span class="text-sky-700 bg-sky-100 px-2 py-1 rounded">Open</span></td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
+    function closeModal() {
+        modal.classList.add("hidden");
+        document.body.classList.remove("overflow-hidden");
+    }
 
-			<div class="mt-6">
-				<h3 class="text-base font-semibold">Future Features (Can Be Implemented Next)</h3>
-				<ul class="mt-3 text-sm text-gray-600 list-disc list-inside space-y-1">
-					<li>Export filtered events and requests to CSV.</li>
-					<li>Bulk approve or reject member join requests.</li>
-					<li>Calendar view for monthly event planning.</li>
-					<li>Email or SMS notifications on request updates.</li>
-					<li>Role-based access for super admin and event coordinators.</li>
-				</ul>
-			</div>
-		</div>
-	</main>
-</div>
+    openBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", closeModal);
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !modal.classList.contains("hidden")) {
+            closeModal();
+        }
+    });
+</script>
 </body>
 </html>
