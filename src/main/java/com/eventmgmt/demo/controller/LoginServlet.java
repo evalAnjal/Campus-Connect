@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("/loginProcess") // This matches the "action" in your index.jsp form
+@WebServlet("/loginProcess") 
 public class LoginServlet extends HttpServlet {
     
     private UserDAO userDAO = new UserDAO();

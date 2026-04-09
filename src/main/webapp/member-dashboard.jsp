@@ -48,7 +48,12 @@
                 <td class="px-6 py-4">${event.title}</td>
                 <td class="px-6 py-4">${event.location}</td>
                 <td class="px-6 py-4">
-                    <button class="bg-indigo-600 text-white px-4 py-2 rounded">Join</button>
+                    <form action="" method="post">
+                        <input type="hidden" name="eventId" value = "${event.id}">
+                        <input type="hidden" name="userId" value = "${user.id}">
+
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Join</button>
+                </form>
                 </td>
             </tr>
         </c:forEach>

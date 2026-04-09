@@ -51,7 +51,7 @@ public class addEventServlet extends HttpServlet {
         newEvent.setDescription(description == null ? "" : description.trim());
         newEvent.setLocation(location.trim());
         newEvent.setEventDate(eventDate);
-        newEvent.setStatus("PENDING");
+        newEvent.setStatus("APPROVED");
 
         if(eventDAO.createEvent(newEvent)) {
             response.sendRedirect(request.getContextPath() + "/admin-dashboard?success=1");
