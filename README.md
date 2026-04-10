@@ -1,53 +1,45 @@
 # Evently Demo
 
-Evently is a small JSP and Servlet-based web application for managing campus events. It supports user registration, login, role-based dashboards, and logout, backed by a PostgreSQL database. App Screenshots are at the bottom of this file
+Evently Demo is a Java web app for campus-style event management, built with JSP, Servlets, Maven, and PostgreSQL.
 
-## Features
-
-- User registration and login
-- Session-based authentication
-- Role-based routing for `ADMIN` and regular members
-- Admin dashboard and member dashboard pages
-- Event search on the member dashboard
-- PostgreSQL persistence for user accounts
+It supports:
+- Registration and login
+- Role-based redirect (admin and member)
+- Event creation and listing
+- Event joining for members
+- Basic admin dashboard metrics
 
 ## Tech Stack
 
 - Java 11
-- Maven WAR project
-- Jakarta Servlet 6.1
+- Maven (WAR packaging)
+- Jakarta Servlet API 6.1
 - JSP
 - PostgreSQL
-- Tailwind CSS via CDN for page styling
+- Embedded Jetty via Maven plugin (run mode)
 
-## Project Structure
+## Project Layout
 
-- `src/main/java/com/eventmgmt/demo/controller` - servlet controllers for login, registration, and logout
-- `src/main/java/com/eventmgmt/demo/DAO` - database access logic
-- `src/main/java/com/eventmgmt/demo/model` - application models
-- `src/main/java/com/eventmgmt/demo/util` - database connection helper
-- `src/main/webapp` - JSP pages and static web assets
+- src/main/java/com/eventmgmt/demo/controller: Servlet endpoints
+- src/main/java/com/eventmgmt/demo/DAO: Data access classes
+- src/main/java/com/eventmgmt/demo/model: Domain models
+- src/main/java/com/eventmgmt/demo/util: Database connection utility
+- src/main/webapp: JSP views and WEB-INF
 
 ## Requirements
 
-- Java 11 or newer
+- Java 11+
 - Maven 3.8+
-- PostgreSQL database
-- A Servlet 6.0 compatible container or the bundled Jetty Maven plugin
+- PostgreSQL instance
 
 ## Database Setup
 
-The application reads its PostgreSQL connection from `src/main/java/com/eventmgmt/demo/util/DBconnection.java`.
+Connection details are currently hardcoded in:
+- src/main/java/com/eventmgmt/demo/util/DBconnection.java
 
-Before running the app, make sure your database has a `users` table with at least these columns:
+Minimum schema used by current DAOs:
 
-- `id`
-- `username`
-- `email`
-- `password`
-- `role`
-
-Example schema:
+users table:
 
 ```sql
 CREATE TABLE users (
@@ -59,44 +51,45 @@ CREATE TABLE users (
 );
 ```
 
-If you are using a different database, update the JDBC URL, username, and password in `DBconnection.java`.
+events table:
 
-## Run the Application
+```sql
+CREATE TABLE events (
+	id SERIAL PRIMARY KEY,
+	title VARCHAR(200) NOT NULL,
+	description TEXT,
+	location VARCHAR(200),
+	event_date TIMESTAMP NOT NULL,
+	status VARCHAR(20) NOT NULL DEFAULT 'APPROVED'
+);
+```
 
-### Option 1: Use the helper script
+registrations table:
+
+```sql
+CREATE TABLE registrations (
+	id SERIAL PRIMARY KEY,
+	user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+	event_id INT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+	UNIQUE (user_id, event_id)
+);
+```
+
+## Run Locally
+
+Option 1 (recommended):
 
 ```bash
 ./start-server.sh
 ```
 
-This script frees port 8080 if needed and then starts the app with the Jetty Maven plugin.
+This script attempts to free port 8080 and starts Jetty using Maven.
 
-### Option 2: Run with Maven directly
+Option 2:
 
 ```bash
 ./mvnw -DskipTests org.eclipse.jetty.ee10:jetty-ee10-maven-plugin:12.0.15:run
 ```
-
-## Access the App
-
-After the server starts, open:
-
-- Login page: `http://localhost:8080/index.jsp`
-- Registration page: `http://localhost:8080/register.jsp`
-
-## Login Flow
-
-- Users register from the registration page.
-- Login submits to `/loginProcess`.
-- If the user role is `ADMIN`, the app redirects to `admin-dashboard.jsp`.
-- Other users are redirected to `member-dashboard.jsp`.
-- Logout is handled at `/logout`.
-
-## Notes
-
-- The current dashboards are mostly static UI examples, with session checks and basic navigation.
-- The member dashboard includes a client-side search filter for the event list.
-- Registration currently stores plain-text passwords in the database. For production use, add password hashing before storing credentials.
 
 ## Build
 
@@ -104,14 +97,34 @@ After the server starts, open:
 ./mvnw clean package
 ```
 
-The packaged WAR is generated under `target/`.
+WAR output is generated in target.
 
-#SCREENSHOTS
+## Main Routes
 
-<hr>
+- GET /index.jsp: Login page
+- GET /register.jsp: Registration page
+- POST /registerProcess: Create account
+- POST /loginProcess: Authenticate user
+- GET /admin-dashboard: Admin dashboard
+- GET /Member-dashboard: Member dashboard
+- POST /addEvent: Create event
+- POST /joinEvent: Join event
+- GET /logout: Logout and clear session
 
-![alt text](image.png)
+## Security Notes
 
-![alt text](image-1.png)
+- Passwords are currently checked and stored in plain text.
+- Database credentials are committed in source.
 
-![alt text](image-2.png)
+Before production use:
+- Use BCrypt (or similar) for password hashing.
+- Move DB credentials to environment variables or external config.
+- Add CSRF protection and stronger input validation.
+
+## Screenshots
+
+![Login](image.png)
+
+![Dashboard](image-1.png)
+
+![Events](image-2.png)
