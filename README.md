@@ -1,5 +1,5 @@
 # Evently Demo
-
+l
 Evently Demo is a Java web app for campus-style event management, built with JSP, Servlets, Maven, and PostgreSQL.
 
 It supports:
