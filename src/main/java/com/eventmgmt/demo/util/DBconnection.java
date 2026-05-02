@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBconnection {
+public class DBconnection { 
     
     private static final String URL = "jdbc:postgresql://ep-small-pond-a19ayax8-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require";
     

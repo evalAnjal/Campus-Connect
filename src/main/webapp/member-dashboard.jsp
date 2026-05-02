@@ -72,13 +72,25 @@
                             <td class="px-6 py-4">${event.title}</td>
                             <td class="px-6 py-4">${event.location}</td>
                             <td class="px-6 py-4">
-                                <button
-                                    type="button"
-                                    class="openJoinModal bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-                                    data-event-id="${event.id}"
-                                    data-event-title="${event.title}">
-                                    Join
-                                </button>
+                                <c:choose>
+                                    <c:when test="${joinedIds != null && joinedIds.contains(event.id)}">
+                                        <button
+                                            type="button"
+                                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded cursor-not-allowed"
+                                            disabled>
+                                            Joined
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button
+                                            type="button"
+                                            class="openJoinModal bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+                                            data-event-id="${event.id}"
+                                            data-event-title="${event.title}">
+                                            Join
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                         </tr>
                     </c:forEach>

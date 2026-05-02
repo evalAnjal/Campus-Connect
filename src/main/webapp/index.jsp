@@ -1,3 +1,15 @@
+<%
+    com.eventmgmt.demo.model.User loggedInUser =
+            (com.eventmgmt.demo.model.User) session.getAttribute("user");
+    if (loggedInUser != null) {
+        if ("ADMIN".equals(loggedInUser.getRole())) {
+            response.sendRedirect(request.getContextPath() + "/admin-dashboard");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/Member-dashboard");
+        }
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
